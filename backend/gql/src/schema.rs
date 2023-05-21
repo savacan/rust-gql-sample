@@ -1,6 +1,6 @@
 use crate::{loader::dataloader, note::GraphQLNote};
 use async_graphql::{Context, EmptyMutation, EmptySubscription, Object, Result};
-use sample_sql::{MySqlPool, Note, User};
+use sample_sql::{MySqlPool, Note};
 pub(super) type Schema = async_graphql::Schema<QueryRoot, EmptyMutation, EmptySubscription>;
 
 pub fn schema(pool: MySqlPool) -> Schema {
