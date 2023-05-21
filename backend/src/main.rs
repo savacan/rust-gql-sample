@@ -1,4 +1,5 @@
 use actix_web::{web, App, HttpServer};
+use middleware::UserAuthentication;
 use sample_gql::GraphQLAppExt;
 use sample_sql::MySqlPool;
 use std::env;
@@ -18,6 +19,7 @@ async fn main() {
     let db_pool = setup_mysql().await;
     HttpServer::new(move || {
         App::new()
+            .wrap(UserAuthentication::new(db_pool.clone()))
             .app_data(web::Data::new(db_pool.clone()))
             .configure_graphql_api(db_pool.clone())
     })

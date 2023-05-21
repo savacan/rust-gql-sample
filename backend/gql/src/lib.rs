@@ -9,14 +9,16 @@ use actix_web::{
 };
 use async_graphql::http::{playground_source, GraphQLPlaygroundConfig};
 use async_graphql_actix_web::{GraphQLRequest, GraphQLResponse};
-use sample_sql::MySqlPool;
+use sample_sql::{MySqlPool, User};
 
 #[route("/graphql", method = "POST")]
 async fn graphql_route(
     schema: web::Data<schema::Schema>,
     req: GraphQLRequest,
+    user: Option<web::ReqData<User>>,
 ) -> actix_web::Result<GraphQLResponse> {
-    Ok(schema.execute(req.into_inner()).await.into())
+    let req = req.into_inner().data(user.map(|e| e.into_inner()));
+    Ok(schema.execute(req).await.into())
 }
 
 #[route("/graphql", method = "GET")]

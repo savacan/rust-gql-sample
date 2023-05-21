@@ -4,3 +4,6 @@ pub type Transaction<'a> = sqlx::Transaction<'a, sqlx::MySql>;
 
 mod note;
 pub use note::Note;
+
+mod user;
+pub use user::User;
