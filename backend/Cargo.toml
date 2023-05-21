@@ -1,0 +1,20 @@
+[package]
+name = "backend"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+sample_gql = { path = './gql' }
+sample_sql = { path = './sql' }
+
+actix-web = "4.3"
+anyhow = { version = "1.0", features = ["backtrace"] }
+chrono = { version = "0.4", features = ["serde"] }
+chrono-tz = "0.8"
+env_logger = "0.10"
+dotenv = "0.15.0"
+
+[workspace]
+members = ["sql", "gql"]

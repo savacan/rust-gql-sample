@@ -1,0 +1,27 @@
+[package]
+name = "sample_gql"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+sample_sql = { path = '../sql' }
+
+actix-web = "4.3"
+async-graphql = { version = "5.0", features = [
+    "chrono",
+    "dataloader",
+    "decimal",
+    "opentelemetry",
+    "playground"
+] }
+async-graphql-actix-web = "5.0"
+serde = { version = "1.0", features = ["derive"] }
+async-trait = "0.1"
+futures = "0.3"
+chrono = { version = "0.4", features = ["serde"] }
+
+[dev-dependencies]
+reqwest = { version = "0.11.17", features = ["json"] }
+sqlx = "0.6"
