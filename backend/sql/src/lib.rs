@@ -6,4 +6,4 @@ mod note;
 pub use note::Note;
 
 mod user;
-pub use user::User;
+pub use user::{User, UserRole};

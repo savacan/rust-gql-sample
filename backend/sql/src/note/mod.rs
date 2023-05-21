@@ -1,10 +1,11 @@
 use anyhow::Result;
 use serde::Serialize;
-use sqlx::{Executor, FromRow, MySql};
+use sqlx::{Acquire, Executor, FromRow, MySql};
 
 #[derive(Default, Serialize, FromRow, Clone, PartialEq, Debug)]
 pub struct Note {
     pub id: i64,
+    pub user_id: i64,
     pub title: String,
     pub content: String,
     pub category: Option<String>,
@@ -18,7 +19,7 @@ impl Note {
     {
         let note: Vec<Note> = sqlx::query_as!(
             Note,
-            r#"SELECT id, title, content, category, published FROM note WHERE id=?"#,
+            r#"SELECT id, user_id, title, content, category, published FROM notes WHERE id=?"#,
             id
         )
         .fetch_all(conn)
@@ -44,7 +45,7 @@ impl Note {
             .collect::<Vec<_>>()
             .join(",");
         let query = format!(
-            r#"SELECT id, title, content, category, published FROM note WHERE id IN ({})"#,
+            r#"SELECT id, user_id, title, content, category, published FROM notes WHERE id IN ({})"#,
             ids
         );
 
@@ -58,7 +59,7 @@ impl Note {
     {
         let notes: Vec<Note> = sqlx::query_as!(
             Note,
-            r#"SELECT id, title, content, category, published FROM note"#
+            r#"SELECT id, user_id, title, content, category, published FROM notes"#
         )
         .fetch_all(conn)
         .await?;

@@ -1,6 +1,7 @@
 pub mod loader;
 pub mod note;
 pub mod schema;
+pub mod user;
 
 use actix_web::{
     body::MessageBody,
