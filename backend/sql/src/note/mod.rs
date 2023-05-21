@@ -66,4 +66,37 @@ impl Note {
 
         Ok(notes)
     }
+
+    // acquireを使ってErrorになるやつを再現したい
+    pub async fn find_by_ids_acq<'a, A>(conn: A, note_ids: &[i64]) -> Result<Vec<Note>>
+    where
+        A: Acquire<'a, Database = MySql>,
+    {
+        let mut conn = conn.acquire().await?;
+        let notes_1 = Note::find_by_ids_acq_1(&mut *conn, note_ids).await?;
+        let notes_2 = Note::find_by_ids_acq_2(&mut *conn, note_ids).await?;
+        Ok(if notes_1.len() == notes_2.len() {
+            notes_1
+        } else {
+            notes_2
+        })
+    }
+
+    pub async fn find_by_ids_acq_1<'a, A>(conn: A, note_ids: &[i64]) -> Result<Vec<Note>>
+    where
+        A: Acquire<'a, Database = MySql>,
+    {
+        let mut conn = conn.acquire().await?;
+        let notes = Note::find_by_ids(&mut *conn, note_ids).await?;
+        Ok(notes)
+    }
+
+    pub async fn find_by_ids_acq_2<'a, A>(conn: A, note_ids: &[i64]) -> Result<Vec<Note>>
+    where
+        A: Acquire<'a, Database = MySql>,
+    {
+        let mut conn = conn.acquire().await?;
+        let notes = Note::find_by_ids(&mut *conn, note_ids).await?;
+        Ok(notes)
+    }
 }
