@@ -1,4 +1,5 @@
 pub mod loader;
+pub mod note;
 pub mod schema;
 
 use actix_web::{

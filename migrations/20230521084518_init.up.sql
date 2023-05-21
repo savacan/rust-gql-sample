@@ -2,7 +2,7 @@
 
 CREATE TABLE
     IF NOT EXISTS note (
-        id CHAR(36) PRIMARY KEY NOT NULL,
+        id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
         title VARCHAR(255) NOT NULL UNIQUE,
         content TEXT NOT NULL,
         category VARCHAR(100),
