@@ -1,6 +1,6 @@
 use anyhow::Result;
 use serde::Serialize;
-use sqlx::{Acquire, Executor, FromRow, MySql};
+use sqlx::{Executor, FromRow, MySql};
 
 #[derive(Default, Serialize, FromRow, Clone, PartialEq, Debug)]
 pub struct Note {
