@@ -4,7 +4,7 @@ services:
     image: mysql:latest
     container_name: mysql
     env_file:
-      - ./backend/.env
+      - ./.env
     ports:
       - '6500:3306'
     volumes:
