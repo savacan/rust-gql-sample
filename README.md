@@ -30,3 +30,4 @@ localhost:8088/graphqlにアクセスすると、GraphQL Playgroundが立ち上�
 
 ## TODO  
 - [ ] Readme書く
+- [ ] Dockerに入れる
