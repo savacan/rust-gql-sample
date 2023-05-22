@@ -23,7 +23,8 @@ impl Loader<NoteId> for GraphQLLoader {
     type Error = async_graphql::Error;
     async fn load(&self, keys: &[NoteId]) -> Result<HashMap<NoteId, Self::Value>> {
         let ids = keys.iter().map(|e| e.0).collect::<Vec<_>>();
-        let notes = Note::find_by_ids_acq(&self.pool, &ids).await?;
+        let mut conn = self.pool.acquire().await?;
+        let notes = Note::find_by_ids_con(&mut conn, &ids).await?;
         let map = notes
             .into_iter()
             .map(|note| (NoteId(note.id), GraphQLNote::from(note)))
