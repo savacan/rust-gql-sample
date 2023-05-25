@@ -1,3 +1,4 @@
+pub mod building;
 pub mod loader;
 pub mod note;
 pub mod schema;

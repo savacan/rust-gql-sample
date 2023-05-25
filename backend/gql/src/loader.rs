@@ -1,9 +1,10 @@
 use std::collections::HashMap;
 
 use async_graphql::{dataloader::Loader, Result};
-use sample_sql::{MySqlPool, Note, User};
+use sample_sql::{Building, MySqlPool, Note, User};
 
 use crate::{
+    building::{BuildingByUserId, BuildingId, GraphQLBuilding},
     note::{GraphQLNote, NoteId},
     user::{GraphQLUser, UserId},
 };
@@ -43,6 +44,43 @@ impl Loader<UserId> for GraphQLLoader {
             .into_iter()
             .map(|user| (UserId(user.id), GraphQLUser::from(user)))
             .collect();
+        Ok(map)
+    }
+}
+
+#[async_trait::async_trait]
+impl Loader<BuildingId> for GraphQLLoader {
+    type Value = GraphQLBuilding;
+    type Error = async_graphql::Error;
+    async fn load(&self, keys: &[BuildingId]) -> Result<HashMap<BuildingId, Self::Value>> {
+        let ids = keys.iter().map(|e| e.0).collect::<Vec<_>>();
+        let buildings = Building::find_by_ids(&self.pool, &ids).await?;
+        let map = buildings
+            .into_iter()
+            .map(|building| (BuildingId(building.id), GraphQLBuilding::from(building)))
+            .collect();
+        Ok(map)
+    }
+}
+#[async_trait::async_trait]
+impl Loader<BuildingByUserId> for GraphQLLoader {
+    type Value = Vec<GraphQLBuilding>;
+    type Error = async_graphql::Error;
+    async fn load(
+        &self,
+        keys: &[BuildingByUserId],
+    ) -> Result<HashMap<BuildingByUserId, Self::Value>> {
+        let ids = keys.iter().map(|e| e.0).collect::<Vec<_>>();
+        let buildings = Building::find_by_user_ids(&self.pool, &ids).await?;
+        let mut map = HashMap::new();
+        for building in buildings {
+            map.entry(BuildingByUserId(building.user_id))
+                .or_insert_with(Vec::new)
+                .push(building.into());
+        }
+        for key in keys {
+            map.entry(*key).or_insert_with(Vec::new);
+        }
         Ok(map)
     }
 }

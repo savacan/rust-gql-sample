@@ -7,3 +7,6 @@ pub use note::Note;
 
 mod user;
 pub use user::{User, UserRole};
+
+mod buildings;
+pub use buildings::Building;
